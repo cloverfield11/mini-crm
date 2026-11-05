@@ -102,6 +102,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ taskId, currentProfile, on
   if (!task) return null
 
   const isManager = currentProfile.role === 'manager'
+  const isAuthor = task.author_id === currentProfile.id
   const isAssignedExecutor = task.executor_id === currentProfile.id
 
   return (
@@ -185,8 +186,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ taskId, currentProfile, on
                 </button>
               )}
 
-              {/* На проверке -> Принята (Постановщик) */}
-              {task.status === 'На проверке' && isManager && (
+              {/* На проверке -> Принята (Только постановщик-автор) */}
+              {task.status === 'На проверке' && isManager && isAuthor && (
                 <button
                   disabled={actionLoading}
                   onClick={() => handleStatusChange('Принята')}
@@ -196,8 +197,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ taskId, currentProfile, on
                 </button>
               )}
 
-              {/* На проверке -> На доработке (Постановщик, комментарий обязателен) */}
-              {task.status === 'На проверке' && isManager && !showRejectInput && (
+              {/* На проверке -> На доработке (Только постановщик-автор, комментарий обязателен) */}
+              {task.status === 'На проверке' && isManager && isAuthor && !showRejectInput && (
                 <button
                   disabled={actionLoading}
                   onClick={() => setShowRejectInput(true)}

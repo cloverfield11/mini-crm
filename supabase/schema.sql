@@ -145,13 +145,13 @@ BEGIN
     END IF;
 
   ELSIF v_task.status = 'На проверке' AND p_new_status = 'Принята' THEN
-    IF v_role != 'manager' THEN
-      RAISE EXCEPTION 'Только постановщик может принять задачу';
+    IF v_role != 'manager' OR v_task.author_id != v_user_id THEN
+      RAISE EXCEPTION 'Только постановщик этой задачи может её принять';
     END IF;
 
   ELSIF v_task.status = 'На проверке' AND p_new_status = 'На доработке' THEN
-    IF v_role != 'manager' THEN
-      RAISE EXCEPTION 'Только постановщик может вернуть задачу на доработку';
+    IF v_role != 'manager' OR v_task.author_id != v_user_id THEN
+      RAISE EXCEPTION 'Только постановщик этой задачи может вернуть её на доработку';
     END IF;
     IF p_comment IS NULL OR length(trim(p_comment)) = 0 THEN
       RAISE EXCEPTION 'Комментарий обязателен при возврате на доработку';
